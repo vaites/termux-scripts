@@ -7,14 +7,16 @@ show_usage () {
     echo "Take a photo and save it to a file in JPEG format."
     echo ""
     echo "  -f Use specified file"
+    echo "  -c Copy results to clipboard"
     echo "  -e Echo results"
-    echo "  -s Share results"
-    echo "  -o Echo results"
+    echo "  -s Share detected text"
+    echo "  -o Open detected URL on browser"
     echo ""
     exit 0
 }
 
 FILE=''
+COPY=false
 ECHO=false
 OPEN=false
 SHARE=false
@@ -23,19 +25,16 @@ DELETE=false
 for i in "$@"
 do
     case $i in
+        -c|--copy)
+            COPY=true
+        ;;
         -e|--echo)
             ECHO=true
-            OPEN=false
-            SHARE=false
         ;;
         -o|--open)
-            ECHO=false
             OPEN=true
-            SHARE=false
         ;;
         -s|--share)
-            ECHO=false
-            OPEN=false
             SHARE=true
         ;;
 	*)
@@ -56,11 +55,14 @@ fi
 OUTPUT=`zbarimg --quiet --raw "$FILE"`
 
 if [ "x$OUTPUT" != "x" ]; then
-    if [ $SHARE == true ]; then
+    if [ $COPY == true ]; then
+        termux-clipboard-set "$OUTPUT"
+		termux-toast "Output copied to clipboard"
+    elif [ $SHARE == true ]; then
         echo $OUTPUT | termux-share
     elif [ $OPEN == true ]; then
 	    termux-open-url "$OUTPUT"
-	elif [ $ECHO == true ]; the
+	elif [ $ECHO == true ]; then
         echo $OUTPUT
 	else
 		termux-toast "$OUTPUT"
