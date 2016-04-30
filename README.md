@@ -8,7 +8,7 @@ A few scripts to automate things with Termux on Android:
 Installation
 ------------
 
-Using [https://github.com/vaites/termux-packages/commit/11c62dd2484d16cd4cce471166765b8550873956](Git 2.8.1-2):
+Using [Git 2.8.1-2](https://github.com/vaites/termux-packages/commit/11c62dd2484d16cd4cce471166765b8550873956):
 
     cd && cd ../usr
     mkdir local && cd local
