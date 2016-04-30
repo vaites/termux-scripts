@@ -47,7 +47,9 @@ if [ "x$FILE" == "x" ]; then
     termux-camera-photo -c 0 $FILE
 fi
 
-OUTPUT=`tesseract "$FILE"`
+tesseract "$FILE" ocr
+OUTPUT=`cat ocr.txt`
+rm ocr.txt
 
 if [ "x$OUTPUT" != "x" ]; then
     if [ $COPY == true ]; then
