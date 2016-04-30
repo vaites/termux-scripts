@@ -1,16 +1,15 @@
 #!/data/data/com.termux/files/usr/bin/bash
 set -e -u
 
-SCRIPTNAME=barcode-scan
+SCRIPTNAME=ocr-scan
 show_usage () {
-    echo "Usage: $SCRIPTNAME [-e] [-o] [-s] [-f filename]"
-    echo "Recognizes barcodes on an image and allows to copy, share or open"
+    echo "Usage: $SCRIPTNAME [-e] [-s] [-f filename]"
+    echo "Recognizes text on an image to copy or share results"
     echo ""
     echo "  -f Use specified file"
     echo "  -c Copy results to clipboard"
     echo "  -e Echo results"
     echo "  -s Share detected text"
-    echo "  -o Open detected URL on browser"
     echo ""
     exit 0
 }
@@ -18,7 +17,6 @@ show_usage () {
 FILE=''
 COPY=false
 ECHO=false
-OPEN=false
 SHARE=false
 DELETE=false
 
@@ -30,9 +28,6 @@ do
         ;;
         -e|--echo)
             ECHO=true
-        ;;
-        -o|--open)
-            OPEN=true
         ;;
         -s|--share)
             SHARE=true
@@ -47,12 +42,12 @@ done
 
 if [ "x$FILE" == "x" ]; then
     DELETE=true
-    FILE='./barcode.jpg'
+    FILE='./ocr.jpg'
 
     termux-camera-photo -c 0 $FILE
 fi
 
-OUTPUT=`zbarimg --quiet --raw "$FILE"`
+OUTPUT=`tesseract "$FILE"`
 
 if [ "x$OUTPUT" != "x" ]; then
     if [ $COPY == true ]; then
@@ -60,14 +55,15 @@ if [ "x$OUTPUT" != "x" ]; then
 		termux-toast "Output copied to clipboard"
     elif [ $SHARE == true ]; then
         echo $OUTPUT | termux-share
-    elif [ $OPEN == true ]; then
-	    termux-open-url "$OUTPUT"
 	elif [ $ECHO == true ]; then
         echo $OUTPUT
 	else
 		termux-toast "$OUTPUT"
     fi
 else
-    echo "No barcode found"
+    echo "No text found"
 fi
 
+if [ $DELETE == true ]; then
+    rm -f $FILE
+fi
