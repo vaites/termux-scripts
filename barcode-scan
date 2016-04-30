@@ -1,0 +1,71 @@
+#!/data/data/com.termux/files/usr/bin/bash
+set -e -u
+
+SCRIPTNAME=termux-camera-photo
+show_usage () {
+    echo "Usage: $SCRIPTNAME [-e] [-o] [-s] [-f filename]"
+    echo "Take a photo and save it to a file in JPEG format."
+    echo ""
+    echo "  -f Use specified file"
+    echo "  -e Echo results"
+    echo "  -s Share results"
+    echo "  -o Echo results"
+    echo ""
+    exit 0
+}
+
+FILE=''
+ECHO=false
+OPEN=false
+SHARE=false
+DELETE=false
+
+for i in "$@"
+do
+    case $i in
+        -e|--echo)
+            ECHO=true
+            OPEN=false
+            SHARE=false
+        ;;
+        -o|--open)
+            ECHO=false
+            OPEN=true
+            SHARE=false
+        ;;
+        -s|--share)
+            ECHO=false
+            OPEN=false
+            SHARE=true
+        ;;
+	*)
+	    if [ -f "$i" ]; then
+	        FILE=$i
+	    fi
+	;;
+    esac
+done
+
+if [ "x$FILE" == "x" ]; then
+    DELETE=true
+    FILE='./barcode.jpg'
+
+    termux-camera-photo -c 0 $FILE
+fi
+
+OUTPUT=`zbarimg --quiet --raw "$FILE"`
+
+if [ "x$OUTPUT" != "x" ]; then
+    if [ $SHARE == true ]; then
+        echo $OUTPUT | termux-share
+    elif [ $OPEN == true ]; then
+	    termux-open-url "$OUTPUT"
+	elif [ $ECHO == true ]; the
+        echo $OUTPUT
+	else
+		termux-toast "$OUTPUT"
+    fi
+else
+    echo "No barcode found"
+fi
+
