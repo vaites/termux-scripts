@@ -4,6 +4,7 @@ Termux Scripts
 A few scripts to automate things with Termux on Android:
 
 * **barcode-scan**: scan a file (or take a photo if not specified) for text or URLs using ZBar package
+* **ocr-scan**: scan a file (or take a photo if not specified) for text Tesseract package
 
 Installation
 ------------
