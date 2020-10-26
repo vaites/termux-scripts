@@ -6,6 +6,7 @@ A few scripts to automate things with Termux on Android:
 * **barcode-scan**: scan a file (or take a photo if not specified) for text or URLs using ZBar package
 * **ocr-scan**: scan a file (or take a photo if not specified) for text Tesseract package
 * **php-web-server**: start the built-in PHP web server displaying the IP address to connect to
+* **ssh-server**: start the OpenSSH server and display the wireless IP to connect to
 
 Installation
 ------------
