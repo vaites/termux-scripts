@@ -23,6 +23,10 @@ DELETE=false
 for i in "$@"
 do
     case $i in
+		-h|--help)
+	    	show_usage
+		    exit 0
+		;;
         -c|--copy)
             COPY=true
         ;;
